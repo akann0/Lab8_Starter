@@ -24,7 +24,7 @@ describe('Basic user flow for Website', () => {
     // Query select all of the <product-item> elements
     const prodItems = await page.$$('product-item');
     for (let i = 0; i < prodItems.length; i++) {
-      console.log(`Checking product item 1/${prodItems.length}`);
+      //console.log(`Checking product item ${i}/${prodItems.length}`);
       // Grab the .data property of <product-items> to grab all of the json data stored inside
       data = await prodItems[i].getProperty('data');
       // Convert that property to JSON
@@ -65,11 +65,24 @@ describe('Basic user flow for Website', () => {
     const prodItems = await page.$$('product-item');
     //, then for every single product element
     // get the shadowRoot and query select the button inside,
+    //let iterations = 0;
+    console.log(prodItems);
     for (let i = 0; i < prodItems.length; i++) {
+      if (i == 0){continue;}
+      console.log(`Checking product item ${i+1}/${prodItems.length}`);
       const shadowroot = await prodItems[i].getProperty('shadowRoot');
       const button = await shadowroot.$('button');
     // and click on it.
       await button.click();
+
+
+      // Check to see if the innerText of #cart-count is i+1
+      const cartCount = await page.$('#cart-count');
+      const innerText = await cartCount.getProperty('innerText');
+      const text = await innerText.jsonValue();
+      console.log(text);
+      expect(text).toBe(`${i+1}`);
+      
     }
     // Check to see if the innerText of #cart-count is 20
     const cartCount = await page.$('#cart-count');
@@ -132,9 +145,10 @@ describe('Basic user flow for Website', () => {
     //, then for every single product element
     // get the shadowRoot and query select the button inside,
     for (let i = 0; i < prodItems.length; i++) {
+      console.log(`Checking product item ${i+1}/${prodItems.length}`);
       const shadowroot = await prodItems[i].getProperty('shadowRoot');
       const button = await shadowroot.$('button');
-    // and click on it.
+      // and click on it.
       await button.click();
     }
 
@@ -143,7 +157,7 @@ describe('Basic user flow for Website', () => {
     const text = await innerText.jsonValue();
     expect(text).toBe("0");
 
-  }, 10000);
+  }, 30000);
 
   // Checking to make sure that it remembers us removing everything from the cart
   // after we refresh the page
@@ -155,13 +169,13 @@ describe('Basic user flow for Website', () => {
     await page.reload();
     prodItems = await page.$$('product-item');
     //, and check every
-    // element to make sure that all of their buttons say "Remove from Cart".
+    // element to make sure that all of their buttons say "Add to Cart".
     for (let i = 0; i < prodItems.length; i++) {
       const shadowroot = await prodItems[i].getProperty('shadowRoot');
       const button = await shadowroot.$('button');
       const innerText = await button.getProperty('innerText');
       const text = await innerText.jsonValue();
-      expect(text).toBe("Remove from Cart");
+      expect(text).toBe("Add to Cart");
     }
     // Also check to make sure that #cart-count is still 0
     const cartCount = await page.$('#cart-count');

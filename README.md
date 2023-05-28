@@ -1,4 +1,5 @@
 # Lab 8 - Starter
+Aaron Kann, no partner
 
 1. You should run your automated tests in a GitHub action,
 as this will prevent bad code from being pushed while saving
@@ -13,3 +14,9 @@ to test small and simple tasks
 4. You would write a unit test to test a character limit for a messaging app
 because this feature is small enough in scope that it makes sense to test
 with a unit test.
+
+e-e testing:
+![](./lab8.test.js.png)
+
+unit testing:
+![](others.js.png)
